@@ -1,0 +1,5 @@
+flaskr.db
+.eggs/
+.idea
+
+*.py[co]
