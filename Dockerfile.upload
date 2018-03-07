@@ -1,0 +1,17 @@
+FROM 172.16.74.168/default/python:3.6.4
+MAINTAINER Wenbao Xu<xuwenbao@chinacloud.com.cn>
+
+LABEL support_extension="tar.gz"
+
+WORKDIR /app
+ADD flaskr.tar.gz /app
+ADD entrypoint.sh /
+
+#RUN apt-get install -y gcc libxml2-dev python-dev
+
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt -i https://pypi.douban.com/simple/
+
+EXPOSE 80
+
+CMD ["flask", "run"]
