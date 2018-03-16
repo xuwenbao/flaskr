@@ -10,28 +10,29 @@
     :license: BSD, see LICENSE for more details.
 """
 
-import os
-from flask import Flask, g
+from flask import Flask
 from werkzeug.utils import find_modules, import_string
-from flaskr.blueprints.flaskr import init_db
+from flaskr.blueprints.flaskr import db, init_db
 
 
 def create_app(config=None):
     app = Flask('flaskr')
 
     app.config.update(dict(
-        DATABASE=os.path.join(app.root_path, 'flaskr.db'),
+        SQLALCHEMY_DATABASE_URI='mysql+pymysql://scott:tiger@localhost/flaskr',
         DEBUG=True,
         SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
         USERNAME='admin',
         PASSWORD='default'
     ))
     app.config.update(config or {})
-    app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+    app.config.from_envvar('FLASKR_SETTINGS', silent=False)
+
+    db.init_app(app)
 
     register_blueprints(app)
     register_cli(app)
-    register_teardowns(app)
+    # register_teardowns(app)
 
     return app
 
@@ -55,10 +56,10 @@ def register_cli(app):
         init_db()
         print('Initialized the database.')
 
-
-def register_teardowns(app):
-    @app.teardown_appcontext
-    def close_db(error):
-        """Closes the database again at the end of the request."""
-        if hasattr(g, 'sqlite_db'):
-            g.sqlite_db.close()
+#
+# def register_teardowns(app):
+#     @app.teardown_appcontext
+#     def close_db(error):
+#         """Closes the database again at the end of the request."""
+#         if hasattr(g, 'sqlite_db'):
+#             g.sqlite_db.close()

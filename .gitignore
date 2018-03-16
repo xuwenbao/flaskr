@@ -1,4 +1,5 @@
 flaskr.db
+settings.py
 .eggs/
 .idea
 *.tar.gz

@@ -4,6 +4,7 @@ MAINTAINER Wenbao Xu<xuwenbao@chinacloud.com.cn>
 WORKDIR /usr/src/app
 
 ENV FLASK_APP app.py
+ENV FLASKR_SETTINGS /usr/src/app/settings.py
 
 COPY . .
 RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.douban.com/simple/

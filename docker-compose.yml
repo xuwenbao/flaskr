@@ -1,0 +1,25 @@
+version: '2'
+services:
+  web:
+    build: .
+    image: hub.chinacloud.com/default/flaskr:step2
+    ports:
+      - 8000:8000
+    volumes:
+      - "./settings.py:/usr/src/app/settings.py"
+    links:
+      - db
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: hub.chinacloud.com/default/mysql:5.6
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: scott
+      MYSQL_PASSWORD: tiger
+      MYSQL_DATABASE: flaskr
+    command: mysqld --datadir=/var/lib/mysql --user=mysql --character-set-server=utf8
