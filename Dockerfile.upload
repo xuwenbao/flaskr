@@ -1,19 +1,29 @@
-FROM 172.16.74.168/default/python:3.6.4
+FROM hub.chinacloud.com/default/python:2.7.15-gcc
 MAINTAINER Wenbao Xu<xuwenbao@chinacloud.com.cn>
+
+# 可通过此变量引用后续上传的程序包名称，如 “jwzh-mian.war”
+ARG PACKAGE_NAME
+# 可通过此变量引用后续上传的程序包名称，不包含后缀名，如 “jwzh-mian”
+ARG PACKAGE_BASE_NAME
+# 可通过此变量引用后续上传的程序包后缀名，如 “.war”
+ARG PACKAGE_EXT_NAME
 
 WORKDIR /usr/src/app
 
 ENV FLASK_APP app.py
+ENV FLASKR_SETTINGS /usr/src/app/settings.py
 
 LABEL support_extension="tar.gz"
 
-ADD flaskr.tar.gz /usr/src/app/
+ADD $PACKAGE_NAME /usr/src/app/
 
-#RUN apt-get install -y gcc libxml2-dev python-dev
+# RUN apt-get install -y gcc libxml2-dev python-dev
+RUN apk add gcc libffi-dev python-dev
 
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt -i https://pypi.douban.com/simple/
 
 EXPOSE 8000
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 
 CMD ["python", "-m", "flask", "run", "--host", "0.0.0.0", "--port", "8000"]
